@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>_reAPer_ — Neon Glitch Overlay</title>
+  <meta name="description" content="Neon glitch gaming text overlay (transparent background) — copy to index.html" />
+  <style>
+    :root{
+      --fontSize: clamp(48px, 12vw, 160px);
+      --weight: 900;
+      --shadow1: 0 0 10px rgba(0,255,200,0.45);
+      --shadow2: 0 0 26px rgba(0,140,255,0.30);
+    }
+
+    /* Reset & layout */
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: transparent; /* overlay-friendly */
+    }
+    body {
+      display: grid;
+      place-items: center;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans";
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+    }
+
+    /* Stage with subtle scanlines */
+    .stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+      padding: 2vh 4vw;
+    }
+    .stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 100% 3px;
+      mix-blend-mode: overlay;
+      opacity: .38;
+      pointer-events: none;
+    }
+
+    /* Main text */
+    .txt {
+      position: relative;
+      font-weight: var(--weight);
+      font-size: var(--fontSize);
+      line-height: 1;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: #eafcff;
+      text-shadow: var(--shadow1), var(--shadow2);
+      filter: saturate(1.15) contrast(1.05);
+      will-change: transform;
+    }
+
+    /* Colorful animated fill */
+    .fill {
+      background: linear-gradient(90deg, #00ffd5, #5aa9ff, #b245ff, #ff8ac4, #00ffd5);
+      background-size: 400% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: hueSlide 6.5s linear infinite;
+    }
+    @keyframes hueSlide {
+      0%   { background-position: 0% 50%; }
+      25%  { background-position: 100% 50%; }
+      50%  { background-position: 200% 50%; }
+      75%  { background-position: 300% 50%; }
+      100% { background-position: 400% 50%; }
+    }
+
+    /* RGB split / glitch layers */
+    .txt::before,
+    .txt::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      text-shadow: none;
+    }
+    .txt::before {
+      color: rgba(0,255,170,0.86);
+      transform: translate(2px, 0);
+      filter: blur(0.3px);
+      animation: glitchX 2.2s infinite steps(20);
+    }
+    .txt::after {
+      color: rgba(0,120,255,0.86);
+      transform: translate(-2px, 0);
+      filter: blur(0.6px);
+      animation: glitchX 1.8s infinite steps(18) reverse;
+    }
+    @keyframes glitchX {
+      0% { transform: translate(0, 0); }
+      10% { transform: translate(2px, -1px); }
+      20% { transform: translate(-2px, 1px); }
+      30% { transform: translate(3px, -2px); }
+      40% { transform: translate(-1px, 2px); }
+      50% { transform: translate(0, 0); }
+      60% { transform: translate(2px, 1px); }
+      70% { transform: translate(-3px, -1px); }
+      80% { transform: translate(1px, 0); }
+      90% { transform: translate(-1px, 1px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    /* Vertical slice glitch via clip-path */
+    .slice {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      color: rgba(255,255,255,0);
+    }
+    .slice::before {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      transform: translateX(0);
+      animation: sliceShift 3.2s infinite linear;
+      filter: drop-shadow(0 0 8px rgba(255,0,150,0.25));
+    }
+    @keyframes sliceShift {
+      0% { clip-path: inset(0 0 90% 0); transform: translateX(0); opacity: 0.95; }
+      10% { clip-path: inset(10% 0 70% 0); transform: translateX(6px); opacity: 1; }
+      25% { clip-path: inset(40% 0 30% 0); transform: translateX(-6px); opacity: .9; }
+      40% { clip-path: inset(20% 0 50% 0); transform: translateX(8px); opacity: 1; }
+      60% { clip-path: inset(0 0 80% 0); transform: translateX(-4px); opacity: .95; }
+      80% { clip-path: inset(30% 0 10% 0); transform: translateX(4px); opacity: 1; }
+      100% { clip-path: inset(0 0 0 0); transform: translateX(0); opacity: .98; }
+    }
+
+    /* Subtle flicker to add life */
+    .flicker {
+      animation: flick 4s infinite steps(60);
+    }
+    @keyframes flick {
+      0%,100% { opacity: 1; }
+      48% { opacity: .96; }
+      50% { opacity: .86; }
+      52% { opacity: .98; }
+      80% { opacity: .92; }
+    }
+
+    /* Glow boost (helper class) */
+    .glow {
+      filter: drop-shadow(0 0 6px rgba(0,255,204,0.55)) drop-shadow(0 0 18px rgba(0,140,255,0.45));
+    }
+
+    /* Responsive safe padding */
+    @supports (padding: max(0px)) {
+      .stage { padding: max(0px, env(safe-area-inset-top)) max(0px, env(safe-area-inset-right)) max(0px, env(safe-area-inset-bottom)) max(0px, env(safe-area-inset-left)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <!-- Main text (animated fill + RGB glitch layers) -->
+    <div id="headline" class="txt fill flicker glow" data-text="_reAPer_">_reAPer_</div>
+
+    <!-- Extra slice glitch overlay for sharper cuts -->
+    <div class="slice" data-text="_reAPer_"></div>
+  </div>
+
+  <script>
+    // Quick customization via URL query:
+    // ?text=YourText  -- change text
+    // ?size=120       -- px or use '10vw'
+    // ?weight=800
+    // ?bg=1           -- toggle dark preview background
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const el = document.getElementById('headline');
+      const slice = document.querySelector('.slice');
+
+      const txt = params.get('text');
+      if (txt) {
+        el.textContent = txt;
+        el.setAttribute('data-text', txt);
+        if (slice) slice.setAttribute('data-text', txt);
+      }
+
+      const size = params.get('size');
+      if (size) {
+        const val = size.endsWith('px') || size.endsWith('vw') ? size : size + 'px';
+        document.documentElement.style.setProperty('--fontSize', val);
+      }
+
+      const weight = params.get('weight');
+      if (weight) document.documentElement.style.setProperty('--weight', weight);
+
+      if (params.get('bg') === '1') {
+        document.body.style.background = 'radial-gradient(1200px 800px at 50% 20%, rgba(0,255,200,0.06), transparent 60%), radial-gradient(1200px 800px at 50% 80%, rgba(0,110,255,0.06), transparent 60%), #080b0f';
+      }
+
+      // Toggle dark preview by pressing B
+      window.addEventListener('keydown', e => {
+        if (e.key.toLowerCase() === 'b') {
+          if (document.body.style.background) document.body.style.background = '';
+          else document.body.style.background = 'radial-gradient(1200px 800px at 50% 20%, rgba(0,255,200,0.06), transparent 60%), radial-gradient(1200px 800px at 50% 80%, rgba(0,110,255,0.06), transparent 60%), #080b0f';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
