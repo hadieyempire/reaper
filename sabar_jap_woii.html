@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SABAR JAP WOII - Gaming Effect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --stroke: rgba(0,0,0,.65);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+    }
+    body {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent; /* keep transparent for overlay */
+      overflow: hidden;
+    }
+    h1 {
+      font-family: 'Bungee', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin: 0;
+      padding: .2em .4em;
+      font-size: clamp(48px, 9vw, 140px);
+      line-height: 1;
+      position: relative;
+
+      /* Animated RGB gradient fill */
+      background: linear-gradient(90deg, #00eaff, #ff1b6b, #ffe53b, #00eaff);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+              background-clip: text;
+      color: transparent;
+
+      /* Readability on any background */
+      -webkit-text-stroke: 3px var(--stroke);
+              text-shadow:
+                0 0 14px rgba(0, 234, 255, .55),
+                0 0 28px rgba(255, 27, 107, .45),
+                0 0 42px rgba(255, 229, 59, .35);
+
+      /* Animations */
+      animation:
+        gradientSlide 3.8s linear infinite,
+        neonPulse 1.6s ease-in-out infinite,
+        softJitter 6s steps(1,end) infinite;
+    }
+
+    /* Moving gradient */
+    @keyframes gradientSlide {
+      0%   { background-position:   0% 50%; }
+      100% { background-position: 300% 50%; }
+    }
+
+    /* Subtle neon breathing */
+    @keyframes neonPulse {
+      0%, 100% { filter: drop-shadow(0 0 6px rgba(255,255,255,.25)); }
+      50%      { filter: drop-shadow(0 0 14px rgba(255,255,255,.45)); }
+    }
+
+    /* Occasional tiny jitter for 'gaming' vibe */
+    @keyframes softJitter {
+      0%, 92%, 100% { transform: translate(0,0) skewX(0deg); }
+      93% { transform: translate(-1px, 1px) skewX(1deg); }
+      94% { transform: translate( 1px,-1px) skewX(-1deg); }
+      95% { transform: translate(-1px, 0)  skewX(.5deg); }
+      96% { transform: translate( 0, 1px)  skewX(-.5deg); }
+      97% { transform: translate( 1px,-1px) skewX(.8deg); }
+      98% { transform: translate( 0, 0)     skewX(0deg); }
+      99% { transform: translate( 1px, 1px) skewX(-.6deg); }
+    }
+
+    /* Optional top/bottom scanlines (very subtle) */
+    .scanline {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: radial-gradient(closest-side, rgba(255,255,255,.35), rgba(255,255,255,0));
+      opacity: .25;
+      animation: sweep 2.4s linear infinite;
+      pointer-events: none;
+    }
+    .scanline.top { top: 15%; animation-delay: .6s; }
+    .scanline.bot { bottom: 18%; }
+
+    @keyframes sweep {
+      0%   { transform: translateX(-20%); }
+      100% { transform: translateX(120%); }
+    }
+  </style>
+</head>
+<body>
+  <div class="scanline top"></div>
+  <h1>SABAR JAP WOII</h1>
+  <div class="scanline bot"></div>
+</body>
+</html>
