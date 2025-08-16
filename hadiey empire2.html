@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>_reAPer_ — Glitch Overlay</title>
+  <style>
+    :root{
+      --fontSize: clamp(48px, 12vw, 180px);
+      --weight: 900;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; background: transparent; }
+    body {
+      display: grid;
+      place-items: center;
+      font-family: "Orbitron", sans-serif;
+      overflow: hidden;
+    }
+    .stage {
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+    .headline {
+      position: relative;
+      font-weight: var(--weight);
+      font-size: var(--fontSize);
+      letter-spacing: 0.04em;
+      color: #f5fbff;
+      text-transform: none;
+      text-shadow:
+        0 0 8px rgba(0,255,200,0.5),
+        0 0 22px rgba(0,150,255,0.28),
+        0 0 36px rgba(255,0,200,0.20);
+    }
+    .fill {
+      background: linear-gradient(90deg, #00ffd5, #51a6ff, #b245ff, #ff6aa7, #00ffd5);
+      background-size: 500% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: hueShift 7s linear infinite;
+    }
+    @keyframes hueShift {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 500% 50%; }
+    }
+    .headline::before,
+    .headline::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+    .headline::before {
+      color: rgba(0,255,170,0.9);
+      transform: translate(3px, -1px);
+      animation: glitchA 2s infinite steps(20);
+    }
+    .headline::after {
+      color: rgba(255,60,190,0.85);
+      transform: translate(-3px, 1px);
+      animation: glitchB 2s infinite steps(18) reverse;
+    }
+    @keyframes glitchA {
+      0% { transform: translate(0,0); }
+      20% { transform: translate(3px,-2px); }
+      40% { transform: translate(-2px,1px); }
+      60% { transform: translate(4px,-1px); }
+      80% { transform: translate(-3px,2px); }
+      100% { transform: translate(0,0); }
+    }
+    @keyframes glitchB {
+      0% { transform: translate(0,0); }
+      25% { transform: translate(-3px,1px); }
+      50% { transform: translate(2px,-1px); }
+      75% { transform: translate(-4px,2px); }
+      100% { transform: translate(0,0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div id="main" class="headline fill" data-text="_reAPer_">_reAPer_</div>
+  </div>
+</body>
+</html>
