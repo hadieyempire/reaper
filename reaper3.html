@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>reAPer — Hadiey Empire Style</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: transparent;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+    body {
+      font-family: 'Orbitron', system-ui, sans-serif;
+    }
+    .glitch {
+      position: relative;
+      font-size: clamp(48px, 12vw, 200px);
+      font-weight: 900;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      animation: flicker 2s infinite;
+    }
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      overflow: hidden;
+      clip: rect(0, 900px, 0, 0);
+    }
+    .glitch::before {
+      left: 2px;
+      text-shadow: -2px 0 magenta;
+      animation: glitchTop 2s infinite linear alternate-reverse;
+      color: cyan;
+    }
+    .glitch::after {
+      left: -2px;
+      text-shadow: -2px 0 cyan;
+      animation: glitchBottom 1.5s infinite linear alternate-reverse;
+      color: magenta;
+    }
+    @keyframes glitchTop {
+      0% { clip: rect(0, 9999px, 0, 0); }
+      10% { clip: rect(10px, 9999px, 50px, 0); }
+      20% { clip: rect(85px, 9999px, 140px, 0); }
+      30% { clip: rect(25px, 9999px, 90px, 0); }
+      40% { clip: rect(65px, 9999px, 120px, 0); }
+      50% { clip: rect(0, 9999px, 100px, 0); }
+      60% { clip: rect(30px, 9999px, 80px, 0); }
+      70% { clip: rect(60px, 9999px, 150px, 0); }
+      80% { clip: rect(10px, 9999px, 70px, 0); }
+      90% { clip: rect(45px, 9999px, 100px, 0); }
+      100% { clip: rect(5px, 9999px, 75px, 0); }
+    }
+    @keyframes glitchBottom {
+      0% { clip: rect(0, 9999px, 0, 0); }
+      10% { clip: rect(55px, 9999px, 120px, 0); }
+      20% { clip: rect(15px, 9999px, 65px, 0); }
+      30% { clip: rect(45px, 9999px, 110px, 0); }
+      40% { clip: rect(5px, 9999px, 75px, 0); }
+      50% { clip: rect(20px, 9999px, 90px, 0); }
+      60% { clip: rect(65px, 9999px, 130px, 0); }
+      70% { clip: rect(25px, 9999px, 85px, 0); }
+      80% { clip: rect(50px, 9999px, 100px, 0); }
+      90% { clip: rect(15px, 9999px, 60px, 0); }
+      100% { clip: rect(35px, 9999px, 95px, 0); }
+    }
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      45% { opacity: 0.9; }
+      50% { opacity: 0.75; }
+      55% { opacity: 0.9; }
+    }
+    /* glowing border behind */
+    .glitch::after, .glitch::before, .glitch {
+      text-shadow: 0 0 5px #00f6ff, 0 0 15px #ff00ff, 0 0 25px #00f6ff, 0 0 35px #ff00ff;
+    }
+  </style>
+</head>
+<body>
+  <div id="headline" class="glitch" data-text="reAPer">reAPer</div>
+
+  <script>
+    (function(){
+      const params = new URLSearchParams(location.search);
+      const el = document.getElementById('headline');
+      const txt = params.get('text');
+      if (txt) {
+        el.textContent = txt;
+        el.setAttribute('data-text', txt);
+      }
+      const size = params.get('size');
+      if (size) {
+        el.style.fontSize = size.endsWith('px')||size.endsWith('vw')?size:(size+'px');
+      }
+    })();
+  </script>
+</body>
+</html>
