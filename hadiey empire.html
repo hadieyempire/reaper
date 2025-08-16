@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HADIEY EMPIRE — Signature Glitch</title>
+  <meta name="description" content="HADIEY EMPIRE style neon glitch overlay (transparent background). Copy to index.html" />
+  <style>
+    :root{
+      --fontSize: clamp(48px, 12vw, 180px);
+      --weight: 900;
+      --glow-cyan: rgba(0,255,204,0.55);
+      --glow-mag: rgba(255,0,200,0.40);
+    }
+
+    /* Reset & layout */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; background: transparent; }
+    body {
+      display: grid;
+      place-items: center;
+      font-family: "Orbitron", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+    }
+
+    /* Stage + subtle scanlines */
+    .stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+      padding: 2vh 4vw;
+    }
+    .stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 100% 3px;
+      mix-blend-mode: overlay;
+      opacity: .38;
+      pointer-events: none;
+    }
+
+    /* Core text (Hadiey Empire signature look) */
+    .headline {
+      position: relative;
+      font-weight: var(--weight);
+      font-size: var(--fontSize);
+      line-height: 1;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #f5fbff;
+      text-shadow:
+        0 0 8px rgba(0,255,200,0.5),
+        0 0 22px rgba(0,150,255,0.28),
+        0 0 36px rgba(255,0,200,0.20);
+      filter: saturate(1.2) contrast(1.05);
+      will-change: transform;
+    }
+
+    /* Moving rainbow fill (clip to text) */
+    .fill {
+      background: linear-gradient(90deg, #00ffd5, #51a6ff, #b245ff, #ff6aa7, #00ffd5);
+      background-size: 500% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: hueShift 7s linear infinite;
+    }
+    @keyframes hueShift {
+      0% { background-position: 0% 50%; }
+      33% { background-position: 200% 50%; }
+      66% { background-position: 350% 50%; }
+      100% { background-position: 500% 50%; }
+    }
+
+    /* RGB split glitch layers (screen blend) */
+    .headline::before,
+    .headline::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      text-shadow: none;
+    }
+    .headline::before {
+      color: rgba(0,255,170,0.9);
+      transform: translate(3px, -1px);
+      filter: blur(0.4px);
+      animation: glitchA 2.2s infinite steps(20);
+    }
+    .headline::after {
+      color: rgba(255,60,190,0.85);
+      transform: translate(-3px, 1px);
+      filter: blur(0.8px);
+      animation: glitchB 1.8s infinite steps(18) reverse;
+    }
+
+    @keyframes glitchA {
+      0% { transform: translate(0,0); }
+      10% { transform: translate(3px,-2px); }
+      20% { transform: translate(-2px,1px); }
+      30% { transform: translate(4px,-1px); }
+      40% { transform: translate(-3px,2px); }
+      50% { transform: translate(1px,0); }
+      60% { transform: translate(-2px,-1px); }
+      80% { transform: translate(2px,1px); }
+      100% { transform: translate(0,0); }
+    }
+
+    @keyframes glitchB {
+      0% { transform: translate(0,0); }
+      12% { transform: translate(-3px,1px); }
+      24% { transform: translate(2px,-1px); }
+      36% { transform: translate(-4px,2px); }
+      48% { transform: translate(3px,-2px); }
+      60% { transform: translate(0,0); }
+      80% { transform: translate(-2px,1px); }
+      100% { transform: translate(0,0); }
+    }
+
+    /* Vertical slice glitch overlay (sharp cuts like Hadiey style) */
+    .slice {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      color: rgba(255,255,255,0);
+      z-index: 2;
+    }
+    .slice::before {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      transform: translateX(0);
+      animation: sliceAnim 3.0s infinite linear;
+      filter: drop-shadow(0 0 10px rgba(255,0,150,0.22));
+      opacity: 0.98;
+    }
+    @keyframes sliceAnim {
+      0%   { clip-path: inset(0 0 85% 0); transform: translateX(0); }
+      10%  { clip-path: inset(12% 0 60% 0); transform: translateX(7px); }
+      25%  { clip-path: inset(40% 0 30% 0); transform: translateX(-7px); }
+      40%  { clip-path: inset(22% 0 52% 0); transform: translateX(10px); }
+      60%  { clip-path: inset(0 0 80% 0); transform: translateX(-5px); }
+      80%  { clip-path: inset(30% 0 10% 0); transform: translateX(5px); }
+      100% { clip-path: inset(0 0 0 0); transform: translateX(0); }
+    }
+
+    /* Top-level flicker for organic look */
+    .flicker { animation: subtleFlick 4s infinite steps(60); }
+    @keyframes subtleFlick {
+      0%,100% { opacity: 1; }
+      48% { opacity: 0.96; }
+      50% { opacity: 0.84; }
+      52% { opacity: 0.98; }
+    }
+
+    /* small helper classes */
+    .glow { filter: drop-shadow(0 0 6px var(--glow-cyan)) drop-shadow(0 0 18px var(--glow-mag)); }
+
+    /* safe-area padding for phones/preview */
+    @supports (padding: max(0px)) {
+      .stage { padding: max(0px, env(safe-area-inset-top)) max(0px, env(safe-area-inset-right)) max(0px, env(safe-area-inset-bottom)) max(0px, env(safe-area-inset-left)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <!-- Primary headline: default is HADIEY EMPIRE -->
+    <div id="main" class="headline fill flicker glow" data-text="HADIEY EMPIRE">HADIEY EMPIRE</div>
+
+    <!-- Slice overlay to mimic Hadiey cuts -->
+    <div class="slice" data-text="HADIEY EMPIRE"></div>
+  </div>
+
+  <script>
+    // Usage:
+    // ?text=YourText  (changes displayed text; default = HADIEY EMPIRE)
+    // ?size=120       (px or use '10vw')
+    // ?weight=900
+    // ?bg=1           (preview dark background)
+    (function(){
+      const params = new URLSearchParams(location.search);
+      const txt = params.get('text');
+      const size = params.get('size');
+      const weight = params.get('weight');
+
+      const main = document.getElementById('main');
+      const slice = document.querySelector('.slice');
+
+      if (txt) {
+        main.textContent = txt;
+        main.setAttribute('data-text', txt);
+        if (slice) slice.setAttribute('data-text', txt);
+      }
+      if (size) {
+        const v = size.endsWith('px')||size.endsWith('vw') ? size : (size + 'px');
+        document.documentElement.style.setProperty('--fontSize', v);
+      }
+      if (weight) document.documentElement.style.setProperty('--weight', weight);
+
+      if (params.get('bg') === '1') {
+        document.body.style.background = 'radial-gradient(1200px 800px at 50% 20%, rgba(0,255,200,0.06), transparent 60%), radial-gradient(1200px 800px at 50% 80%, rgba(0,110,255,0.06), transparent 60%), #080b0f';
+      }
+
+      // toggle preview bg with B key
+      window.addEventListener('keydown', e => {
+        if (e.key.toLowerCase() === 'b') {
+          if (document.body.style.background) document.body.style.background = '';
+          else document.body.style.background = 'radial-gradient(1200px 800px at 50% 20%, rgba(0,255,200,0.06), transparent 60%), radial-gradient(1200px 800px at 50% 80%, rgba(0,110,255,0.06), transparent 60%), #080b0f';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
