@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gaming Text Effect</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+    }
+    h1 {
+      font-size: 70px;
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      text-transform: uppercase;
+      position: relative;
+      animation: flicker 2s infinite;
+    }
+
+    /* RGB glowing border */
+    h1::before {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      top: 0;
+      text-shadow: 
+        -2px 0 red,
+         2px 0 blue,
+         0 2px lime;
+      animation: glitch 1s infinite;
+      opacity: 0.8;
+    }
+
+    /* Glitch keyframes */
+    @keyframes glitch {
+      0% { transform: translate(0,0); }
+      20% { transform: translate(-2px,2px); }
+      40% { transform: translate(-2px,-2px); }
+      60% { transform: translate(2px,2px); }
+      80% { transform: translate(2px,-2px); }
+      100% { transform: translate(0,0); }
+    }
+
+    /* Flicker like gaming neon */
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 1;
+      }
+      20%, 24%, 55% {
+        opacity: 0.2;
+      }
+    }
+  </style>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <h1 data-text="HADIEY EMPIRE">HADIEY EMPIRE</h1>
+</body>
+</html>
