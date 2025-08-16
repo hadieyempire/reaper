@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>reAPer — Neon Glitch Text</title>
+  <meta name="description" content="Neon glitch gaming text effect for live overlays." />
+  <style>
+    :root{
+      --txt: "reAPer";
+      --fontSize: clamp(48px, 12vw, 200px);
+      --weight: 900;
+      --h: 200px;
+      --vpad: 0;
+      --shadow: 0 0 12px rgba(0,255,200,.45), 0 0 28px rgba(0,180,255,.35);
+    }
+    /* Reset & canvas */
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: transparent; /* keep transparent for overlays */
+    }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+    .stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      padding: var(--vpad);
+      isolation: isolate;
+    }
+    /* Scanlines subtle */
+    .stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 100% 3px;
+      mix-blend-mode: overlay;
+      opacity: .4;
+      pointer-events: none;
+    }
+    .txt {
+      position: relative;
+      font-weight: var(--weight);
+      font-size: var(--fontSize);
+      line-height: 1;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #eafcff;
+      text-shadow: var(--shadow);
+      filter: saturate(1.2) contrast(1.1);
+      will-change: transform;
+    }
+    /* Shiny gradient fill */
+    .fill {
+      background: linear-gradient( 90deg, #00ffd5, #5aa9ff, #b245ff, #00ffd5 );
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: hueSlide 6s linear infinite;
+    }
+    @keyframes hueSlide {
+      0%   { background-position:   0% 50%; }
+      100% { background-position: 300% 50%; }
+    }
+
+    /* Glitch RGB split using double layers */
+    .txt::before,
+    .txt::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      text-shadow: none;
+    }
+    .txt::before {
+      color: rgba(0, 255, 170, 0.85);
+      transform: translate(0, 0);
+      animation: glitchX 2.2s infinite steps(20), glitchY 1.8s infinite steps(25);
+      filter: blur(0.3px);
+    }
+    .txt::after {
+      color: rgba(0, 130, 255, 0.85);
+      transform: translate(0, 0);
+      animation: glitchX 1.7s infinite steps(18) reverse, glitchY 2.6s infinite steps(22) reverse;
+      filter: blur(0.6px);
+    }
+    @keyframes glitchX {
+      0% { transform: translate(0); }
+      10% { transform: translate(1px); }
+      20% { transform: translate(-1px); }
+      30% { transform: translate(2px); }
+      40% { transform: translate(-2px); }
+      50% { transform: translate(3px); }
+      60% { transform: translate(-1px); }
+      70% { transform: translate(2px); }
+      80% { transform: translate(-2px); }
+      90% { transform: translate(1px); }
+      100% { transform: translate(0); }
+    }
+    @keyframes glitchY {
+      0% { clip-path: inset(0 0 0 0); }
+      15% { clip-path: inset(3% 0 0 0); }
+      30% { clip-path: inset(0 0 4% 0); }
+      45% { clip-path: inset(5% 0 3% 0); }
+      60% { clip-path: inset(1% 0 6% 0); }
+      75% { clip-path: inset(6% 0 1% 0); }
+      90% { clip-path: inset(2% 0 2% 0); }
+      100%{ clip-path: inset(0 0 0 0); }
+    }
+
+    /* Subtle flicker */
+    .flicker {
+      animation: flick 4s infinite steps(60);
+    }
+    @keyframes flick {
+      0%, 100% { opacity: 1; }
+      48% { opacity: .96; }
+      50% { opacity: .88; }
+      52% { opacity: .98; }
+      80% { opacity: .94; }
+    }
+
+    /* Helper for drop-shadow glow */
+    .glow {
+      filter: drop-shadow(0 0 6px rgba(0,255,204,.55)) drop-shadow(0 0 18px rgba(0,140,255,.45));
+    }
+
+    /* Responsive padding for safe areas */
+    @supports (padding: max(0px)) {
+      .stage { padding: max(0px, env(safe-area-inset-top)) max(0px, env(safe-area-inset-right)) max(0px, env(safe-area-inset-bottom)) max(0px, env(safe-area-inset-left)); }
+    }
+
+    /* Optional: add a subtle background if needed (toggle with 'b' key) */
+    body.has-bg {
+      background: radial-gradient(1200px 800px at 50% 20%, rgba(0, 255, 200, 0.08), transparent 60%) ,
+                  radial-gradient(1200px 800px at 50% 80%, rgba(0, 110, 255, 0.08), transparent 60%) ,
+                  #0a0f14;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div id="headline" class="txt fill flicker glow" data-text="reAPer">reAPer</div>
+  </div>
+
+  <script>
+    // Allow quick customization via URL: ?text=YourText&size=120&weight=800&bg=1
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const el = document.getElementById('headline');
+
+      const txt = params.get('text');
+      if (txt) {
+        el.textContent = txt;
+        el.setAttribute('data-text', txt);
+      }
+
+      const size = params.get('size');
+      if (size) {
+        document.documentElement.style.setProperty('--fontSize', size.endsWith('px') || size.endsWith('vw') ? size : size + 'px');
+      }
+
+      const weight = params.get('weight');
+      if (weight) {
+        document.documentElement.style.setProperty('--weight', weight);
+      }
+
+      if (params.get('bg') === '1') {
+        document.body.classList.add('has-bg');
+      }
+
+      // Fit to safe height: if tight browser source, scale down to avoid clipping
+      const fit = () => {
+        const vh = window.innerHeight;
+        const vw = window.innerWidth;
+        const base = Math.min(vw, vh);
+        if (!size) {
+          // scale font roughly to viewport
+          const px = Math.max(48, Math.floor(base * 0.18));
+          document.documentElement.style.setProperty('--fontSize', px + 'px');
+        }
+      };
+      window.addEventListener('resize', fit, { passive: true });
+      fit();
+
+      // Quick toggle: press 'b' to toggle background on/off (useful for previews)
+      window.addEventListener('keydown', (e)=>{
+        if (e.key.toLowerCase() === 'b') document.body.classList.toggle('has-bg');
+      });
+    })();
+  </script>
+</body>
+</html>
