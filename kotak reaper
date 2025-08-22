@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>reAPer Box Effect</title>
+  <style>
+    /* Google Font (letak @import di atas) */
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: transparent; /* sesuai untuk OBS/TikTok Live */
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+    }
+
+    .box {
+      padding: 20px 50px;
+      border: 3px solid #ff004c;
+      border-radius: 16px;
+      background: rgba(0, 0, 0, 0.7);
+      box-shadow:
+        0 0 18px #ff004c,
+        inset 0 0 10px #ff004c;
+      animation: glow 2s infinite alternate;
+    }
+
+    .box h1 {
+      margin: 0;
+      font: 700 48px/1 'Orbitron', system-ui, sans-serif;
+      color: #fff;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px #ff004c, 0 0 20px #ff004c;
+      letter-spacing: 2px;
+      white-space: pre; /* kekalkan ruang dalam teks */
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 10px #ff004c, inset 0 0 6px #ff004c; }
+      to   { box-shadow: 0 0 30px #ff004c, inset 0 0 16px #ff004c; }
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>( _reAPer_ )</h1>
+  </div>
+</body>
+</html>
